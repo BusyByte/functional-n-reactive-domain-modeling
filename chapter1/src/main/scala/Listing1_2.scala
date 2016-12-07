@@ -51,6 +51,9 @@ object Listing1_2 {
     //..
   ) extends Account
 
+  /**
+    * Domain Service
+    */
   trait AccountService {
     def transfer(from: Account, to: Account, amount: Amount): Option[Amount]
   }
