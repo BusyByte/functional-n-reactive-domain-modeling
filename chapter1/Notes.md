@@ -58,3 +58,5 @@ Algebraic data types (ADTs)
 - In Scala we'll also model Entities as immutable case classes 
 
 Repositories
+- abstracts the underlying details of the persistent representation of the object
+- interface doesn’t have any knowledge of the nature of the underlying persistent store
