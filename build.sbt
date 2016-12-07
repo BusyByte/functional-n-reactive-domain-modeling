@@ -1,6 +1,6 @@
 
 lazy val commonSettings = Seq(
-  organization := "package net.nomadicalien",
+  organization := "net.nomadicalien",
   version := "0.1.0-SNAPSHOT",
   scalaVersion := "2.12.0",
   addCompilerPlugin("org.psywerx.hairyfotr" %% "linter" % "0.1.17"),
