@@ -24,6 +24,17 @@ object Listing1_10 {
       if (Verifications.verifyRecord(customer)) Some(customer)
       else None
     }
+
+    /**
+      * NOTE: This is not as good as it could be.
+      * This could still let you open a checking account for a non-verified
+      * Customer.
+      * Would be better to:
+      * - have openCheckingAccount take a VerifiedCustomer
+      * - have verifyCustomer return an Option[VerifiedCustomer]
+      *
+      * This way types can be used to assure an account can never be opened for a non-verified customer
+      */
     def openCheckingAccount(customer: Customer, effectiveDate: Date) = {
       //.. Account-opening logic
       val accountNo   = UUID.randomUUID().toString
