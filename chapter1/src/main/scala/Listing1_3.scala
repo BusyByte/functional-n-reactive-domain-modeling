@@ -3,7 +3,7 @@ package net.nomadicalien
 object Listing1_3 {
   import Listing1_2._
 
-  sealed trait Criteria[T]//not sure why this needs to be a generic?
+  sealed trait Criteria[T] //not sure why this needs to be a generic?
 
   trait AccountRepository {
     def query(accountNo: String): Option[Account]

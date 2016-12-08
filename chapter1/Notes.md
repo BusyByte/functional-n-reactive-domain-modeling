@@ -60,3 +60,30 @@ Algebraic data types (ADTs)
 Repositories
 - abstracts the underlying details of the persistent representation of the object
 - interface doesn’t have any knowledge of the nature of the underlying persistent store
+
+The ubiquitous language
+- business domain vocabulary used in the objects, services, and behavior
+- minimal and doesn’t contain any irrelevant details
+- uses terms from the domain
+- person familiar with the business domain who doesn’t know anything about the underlying implementation platform should also be able to understand what’s going on
+
+Prefer Immutability
+- easier to reason about code
+- free to share across threads
+
+Functional Purity
+
+General principles you need to follow when designing functional domain models:
+- Model the immutable state in an algebraic data type (ADT)
+- Model behaviors as functions in modules
+- behaviors in modules operate on types that the ADTs represent
+
+Decouple state from behavior, behavior is easy to compose
+
+Try, Success, and Failure instead of throwing exceptions
+
+Pure functions compose
+
+Higher-order functions such as map are also known as combinators.
+
+Managing side effects

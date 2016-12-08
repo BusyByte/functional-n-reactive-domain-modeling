@@ -17,7 +17,7 @@ object Listing1_2 {
   trait Account {
     def no: String
     def name: String
-    def bank: Bank // reference to another Entity
+    def bank: Bank       // reference to another Entity
     def address: Address // value object
     def dateOfOpening: Date
     def dateOfClose: Option[Date]
@@ -26,29 +26,30 @@ object Listing1_2 {
   }
 
   type Amount = BigDecimal
-  type Rate = BigDecimal
+  type Rate   = BigDecimal
+
   /**
     * A concrete implementation of Account. Note that the fields override the defs of the trait.
     */
   case class CheckingAccount(
-    no: String,
-    name: String,
-    bank: Bank,
-    address: Address,
-    dateOfOpening: Date,
-    dateOfClose: Option[Date]
-    //..
+      no: String,
+      name: String,
+      bank: Bank,
+      address: Address,
+      dateOfOpening: Date,
+      dateOfClose: Option[Date]
+      //..
   ) extends Account
 
   case class SavingsAccount(
-    no: String,
-    name: String,
-    bank: Bank,
-    address: Address,
-    dateOfOpening: Date,
-    dateOfClose: Option[Date],
-    rateOfInterest: Rate
-    //..
+      no: String,
+      name: String,
+      bank: Bank,
+      address: Address,
+      dateOfOpening: Date,
+      dateOfClose: Option[Date],
+      rateOfInterest: Rate
+      //..
   ) extends Account
 
   /**

@@ -1,4 +1,3 @@
-
 lazy val commonSettings = Seq(
   organization := "net.nomadicalien",
   version := "0.1.0-SNAPSHOT",
