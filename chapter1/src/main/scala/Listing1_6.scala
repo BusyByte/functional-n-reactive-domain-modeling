@@ -5,9 +5,8 @@ package net.nomadicalien
   */
 object Listing1_6 {
 
-
-  import java.util.{ Date, Calendar }
-  import scala.util.{ Try, Success, Failure }
+  import java.util.{Date, Calendar}
+  import scala.util.{Try, Success, Failure}
 
   def today = Calendar.getInstance.getTime
   type Amount = BigDecimal
@@ -15,9 +14,7 @@ object Listing1_6 {
   case class Balance(amount: Amount = 0)
 
   //Account aggregate is now an ADT
-  case class Account(no: String, name: String,
-    dateOfOpening: Date, balance: Balance = Balance())
-
+  case class Account(no: String, name: String, dateOfOpening: Date, balance: Balance = Balance())
 
   //---State (above) and behavior (below) decoupled -----
 

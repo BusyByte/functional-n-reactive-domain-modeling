@@ -9,8 +9,8 @@ object Listing1_8 {
   import Listing1_6._
   import AccountService._
   val generateAuditLog: (Account, Amount) => Try[String] = ???
-  val source = Account("a1", "John", today)
-  val amount: Amount = 100
+  val source                                             = Account("a1", "John", today)
+  val amount: Amount                                     = 100
 
   val write: String => Unit = ???
   debit(source, amount) // Debit the account. Debit returns a Try[Account], which you flatMap in #B.

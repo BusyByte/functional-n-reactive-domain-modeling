@@ -87,3 +87,42 @@ Pure functions compose
 Higher-order functions such as map are also known as combinators.
 
 Managing side effects
+
+Why mixing domain logic and side effects is bad:
+- Entanglement of domain logic and side effects. 
+  - Violates separation of concerns. Domain logic and side effects are orthogonal to each other—entanglement violates a basic software engineering principle.
+- Difficult to unit test.
+  - If domain logic is entangled with side effects, unit testing becomes difficult. You need to resort to mocking that leads to other complications in your source code.
+- Difficult to reason about the domain logic.
+  - You can’t reason about the domain logic that’s entangled with the side effect.
+- Side effects don’t compose and hinder modularity of your code.
+  - Your entangled code remains an island that can’t be com- posed with other functions.
+  
+Referential transparency (from pure functions) -> Substitution model -> equational reasoning 
+
+Allows function composition
+
+Reactive domain models
+- Responsive to user interaction
+- Resilient
+- Elastic
+- Message-driven
+
+Event-driven programming
+
+Events and commands
+
+For each event, you have a type in your model.
+Every domain event contains all information relevant to the change that just occurred in the system.
+Events are meant to be consumed for further action by downstream components of your model.
+Possibly the most important characteristic of a domain event. A monotonicity of time is built into the stream of events.
+
+
+Summary
+- Avoid shared mutable state within your model
+- Referential transparency
+- Organic growth
+- Focus on the core domain
+- Functional makes reactive easier
+- Design for failure
+- Event-based modeling complements the functional model

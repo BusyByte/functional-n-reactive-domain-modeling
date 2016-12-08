@@ -12,10 +12,10 @@ object Listing1_5 {
   case class Balance(amount: Amount = 0)
 
   class Account(
-    val no: String,
-    val name: String,
-    val dateOfOpening: Date,
-    val balance: Balance = Balance() //Balance is now immutable.
+      val no: String,
+      val name: String,
+      val dateOfOpening: Date,
+      val balance: Balance = Balance() //Balance is now immutable.
   ) {
 
     //The operations debit and credit create new instances of Account.
@@ -31,7 +31,7 @@ object Listing1_5 {
 
   //Immutability in action account balance isn’t mutated in place.
   val today = new Date()
-  val a = new Account("a1", "John", today)
+  val a     = new Account("a1", "John", today)
   a.balance == Balance(0)
   val b = a.credit(100)
   a.balance == Balance(0)
