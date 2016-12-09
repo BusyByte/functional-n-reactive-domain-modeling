@@ -96,7 +96,7 @@ Why mixing domain logic and side effects is bad:
 - Difficult to reason about the domain logic.
   - You can’t reason about the domain logic that’s entangled with the side effect.
 - Side effects don’t compose and hinder modularity of your code.
-  - Your entangled code remains an island that can’t be com- posed with other functions.
+  - Your entangled code remains an island that can’t be composed with other functions.
   
 Referential transparency (from pure functions) -> Substitution model -> equational reasoning 
 
