@@ -1,4 +1,4 @@
-package net.nomadicalien
+package net.nomadicalien.ch1
 
 /**
   * The substitution model of evaluation

@@ -1,4 +1,4 @@
-package net.nomadicalien
+package net.nomadicalien.ch1
 
 object Listing1_3 {
   import Listing1_2._

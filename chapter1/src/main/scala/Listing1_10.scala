@@ -1,8 +1,8 @@
-package net.nomadicalien
+package net.nomadicalien.ch1
 
 import java.util.{Date, UUID}
 
-import net.nomadicalien.Listing1_6.Account
+import net.nomadicalien.ch1.Listing1_6.Account
 
 /**
   * Decoupling side effects
