@@ -12,27 +12,27 @@ object Listing2_1 {
   case object SAVINGS extends AccountType
 
   sealed trait AccountLevel
-  case object SILVER extends AccountLevel
-  case object GOLD extends AccountLevel
+  case object SILVER   extends AccountLevel
+  case object GOLD     extends AccountLevel
   case object PLATINUM extends AccountLevel
 
   sealed trait Month
-  case object January extends Month
-  case object February extends Month
-  case object March extends Month
-  case object April extends Month
-  case object May extends Month
-  case object June extends Month
-  case object July extends Month
-  case object August extends Month
+  case object January   extends Month
+  case object February  extends Month
+  case object March     extends Month
+  case object April     extends Month
+  case object May       extends Month
+  case object June      extends Month
+  case object July      extends Month
+  case object August    extends Month
   case object September extends Month
-  case object October extends Month
-  case object November extends Month
-  case object December extends Month
+  case object October   extends Month
+  case object November  extends Month
+  case object December  extends Month
 
   type Year = Int
 
-  type Amount = BigDecimal
+  type Amount       = BigDecimal
   type InterestRate = BigDecimal
 
   case class MonthlyAverageBalance(year: Year, month: Month, averageBalance: Amount)
@@ -46,9 +46,9 @@ object Listing2_1 {
     if (!(account.accountType == SAVINGS))
       Failure(new Exception(s"$account has to be a savings account"))
     else {
-      val rate : InterestRate = account.accountLevel match {
-        case SILVER => 1.0
-        case GOLD => 1.5
+      val rate: InterestRate = account.accountLevel match {
+        case SILVER   => 1.0
+        case GOLD     => 1.5
         case PLATINUM => 2.0
       }
 
@@ -60,6 +60,5 @@ object Listing2_1 {
       Success(interest)
     }
   }
-
 
 }

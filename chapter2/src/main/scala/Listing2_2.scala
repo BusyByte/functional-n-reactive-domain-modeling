@@ -1,6 +1,5 @@
 package net.nomadicalien.ch2
 
-
 /**
   * Calculating interest—a polymorphic version
   */
@@ -23,10 +22,12 @@ object Listing2_2 {
     def rateOfInterest: InterestRate
   }
 
-  final case class SavingsAccount(number: String, name: String, balances: List[MonthlyAverageBalance]) extends InterestBearingAccount {
+  final case class SavingsAccount(number: String, name: String, balances: List[MonthlyAverageBalance])
+      extends InterestBearingAccount {
     lazy val rateOfInterest: InterestRate = 1.0
   }
-  final case class MoneyMarketAccount(number: String, name: String, balances: List[MonthlyAverageBalance]) extends InterestBearingAccount {
+  final case class MoneyMarketAccount(number: String, name: String, balances: List[MonthlyAverageBalance])
+      extends InterestBearingAccount {
     lazy val rateOfInterest: InterestRate = 1.5
   }
 
@@ -38,6 +39,5 @@ object Listing2_2 {
 
     interest
   }
-
 
 }
