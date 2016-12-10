@@ -9,7 +9,6 @@ import scala.util.Try
 
 /**
   * Composition that leads to evolution of abstractions
-
   */
 object Listing2_4 {
 
@@ -38,15 +37,13 @@ object Listing2_4 {
   List(s1, s2, s3).map(calculateInterest(_, dateRange))
 
   //Finds total interest accumulated in a list of savings accounts
-  List(s1, s2, s3).map(calculateInterest(_, dateRange))
-    .foldLeft(0: Amount)((a, e) => e.map(_ + a).getOrElse(a))
+  List(s1, s2, s3).map(calculateInterest(_, dateRange)).foldLeft(0: Amount)((a, e) => e.map(_ + a).getOrElse(a))
 
   // Gets list of interest calculated using the e filter combinator
-  List(s1, s2, s3).map(calculateInterest(_, dateRange))
-      .filter(_.isSuccess)
+  List(s1, s2, s3).map(calculateInterest(_, dateRange)).filter(_.isSuccess)
 
-  def getCurrencyBalance(a: Account): Try[Amount] = ???
-  def getAccountFrom(no: String): Try[Account] = ???
+  def getCurrencyBalance(a: Account): Try[Amount]                      = ???
+  def getAccountFrom(no: String): Try[Account]                         = ???
   def calculateNetAssetValue(a: Account, balance: Amount): Try[Amount] = ???
 
   // Lists net asset value from an account number if net asset value > 100,000
@@ -54,6 +51,6 @@ object Listing2_4 {
     s <- getAccountFrom("a1")
     b <- getCurrencyBalance(s)
     v <- calculateNetAssetValue(s, b)
-    if (v > 100000)
+    if v > 100000.0
   } yield (s, v)
 }
