@@ -11,7 +11,11 @@ lazy val librarySettings = Seq(
   "org.scalacheck" %% "scalacheck"        % "1.13.4" % Test
 )
 
-lazy val root = (project in file(".")).settings(commonSettings: _*).aggregate(chapter1).aggregate(chapter2)
+lazy val root = (project in file("."))
+  .settings(name := "functional-and-reactive-programming-aggregate")
+  .settings(commonSettings: _*)
+  .aggregate(chapter1)
+  .aggregate(chapter2)
 
 lazy val chapterSettings = Seq(
   libraryDependencies ++= librarySettings,
@@ -20,7 +24,13 @@ lazy val chapterSettings = Seq(
 )
 
 lazy val chapter1 =
-  (project in file("chapter1")).settings(name := "chapter1").settings(commonSettings: _*).settings(chapterSettings: _*)
+  (project in file("chapter1"))
+    .settings(name := "functional-and-reactive-programming-chapter1")
+    .settings(commonSettings: _*)
+    .settings(chapterSettings: _*)
 
 lazy val chapter2 =
-  (project in file("chapter2")).settings(name := "chapter2").settings(commonSettings: _*).settings(chapterSettings: _*)
+  (project in file("chapter2"))
+    .settings(name := "functional-and-reactive-programming-chapter2")
+    .settings(commonSettings: _*)
+    .settings(chapterSettings: _*)
