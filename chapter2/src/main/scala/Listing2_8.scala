@@ -10,8 +10,7 @@ object Listing2_8 {
     def number: String
     def name: String
   }
-  case class CheckingAccount(number: String, name: String,
-    dateOfOpening: Date) extends Account
-  case class SavingsAccount(number: String, name: String,
-    dateOfOpening: Date, rateOfInterest: BigDecimal) extends Account
+  case class CheckingAccount(number: String, name: String, dateOfOpening: Date) extends Account
+  case class SavingsAccount(number: String, name: String, dateOfOpening: Date, rateOfInterest: BigDecimal)
+      extends Account
 }

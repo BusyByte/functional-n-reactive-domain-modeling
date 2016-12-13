@@ -74,3 +74,24 @@ modules
 - traits or objects
 - compose smaller traits into larger one
 - add larger one to object
+
+implementing variabilities by using abstract types and vals that Scala offers, 
+which make the dependency graph explicit and expressive
+
+start with interfaces and no concrete types
+make concrete in the respective object declarations
+
+really doing dependency injection at the type level rather than trait mixing
+interfaces corresponds to our interface Components and 
+objects correspond to the Default/Postgres Components
+similar in some respects, rather than a factor method, there is a val 
+ 
+## Making models reactive with Scala
+
+design for failure
+manage exceptions and latency as effects
+
+Try and Future
+
+
+

@@ -1,4 +1,5 @@
 package net.nomadicalien.ch2
+
 /**
   * Modelling currency (sum type)
   */
