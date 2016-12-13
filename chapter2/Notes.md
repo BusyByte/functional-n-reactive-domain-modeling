@@ -93,5 +93,14 @@ manage exceptions and latency as effects
 
 Try and Future
 
+### Managing latency
+
+Future
+composition of futures
 
 
+### Summary
+- Powerful type system of Scala
+- First-class language support for functional programming
+- Algebraic data types and pattern-matching support
+- First-class modules

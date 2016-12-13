@@ -6,13 +6,13 @@ package net.nomadicalien.ch2
 object Listing2_11 {
 
   sealed trait TaxType
-  case object Tax extends TaxType
-  case object Fee extends TaxType
+  case object Tax        extends TaxType
+  case object Fee        extends TaxType
   case object Commission extends TaxType
 
   sealed trait TransactionType
   case object InterestComputation extends TransactionType
-  case object Dividend extends TransactionType
+  case object Dividend            extends TransactionType
 
   type Amount = BigDecimal
 
@@ -30,8 +30,9 @@ object Listing2_11 {
     val table: S
     type S <: TaxCalculationTable
     def calculate(taxOn: Amount): Amount =
-      table.getTaxRates.map { case (t, r) =>
-      doCompute(taxOn, r)
+      table.getTaxRates.map {
+        case (t, r) =>
+          doCompute(taxOn, r)
       }.sum
 
     protected def doCompute(taxOn: Amount, rate: Amount): Amount = {
@@ -55,7 +56,5 @@ object Listing2_11 {
         i - taxCalculation.calculate(i)
       }
   }
-
-
 
 }
