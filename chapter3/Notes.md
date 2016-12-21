@@ -88,3 +88,103 @@ exceptions break referential transparency
 
 sealed traits
 
+### 3.3.3 Get smarter with more expressive types (page 88)
+
+- smart constructor - honor a set of constraints
+- constructor of the class needs to be protected from users - private specifier in the class declaration
+- published API needs to be explicit about failure
+
+### 3.3.4 Aggregates with algebraic data types (page 89)
+
+can move accountNumber into `Position` so don't need to depend whole account entity
+
+- algebraic data types that form the structure of the entity
+- modules that offer the algebra of manipulating the aggregates in a compositional manner
+
+In many situations, you may want to consider using Scala’s Extractor pattern. 
+For more information on why extractors are an improvement over pattern matching, 
+take a look at the paper by Burak Emir, Martin Odersky, and John Williams.
+[Matching Objects with Patterns, by Burak Emir et al.](http://lampwww.epfl.ch/~emir/written/Matching- ObjectsWithPatterns-TR.pdf)
+
+### 3.3.5 Updating aggregates functionally with lenses (page 92)
+
+avoid `var`'s and in-place mutability in general
+
+lens 
+- abstraction for nested copy statements 
+- decent API
+- maintain `goodness` of immutability
+
+- Parametricity
+  - `case class Lens[O, V]` 
+  - `O` is the object
+  - `V` is the field being updated
+- One lens per field
+- Getter - `O => V`
+- Setter - `(O, V) => O`
+
+```scala
+case class Lens[O, V](
+  get: O => V,
+  set: (O, V) => O
+)
+```
+
+Scalaz, Shapeless, Zipper
+
+compose function - compose inner (eg Address) and outer (Customer) lenses 
+
+Expose top-level lenses that allow transformation of lower-level objects only through the root element
+
+when to use:
+- need to perform updates within deeply nested ADTs
+- need to compose updates of ADTs with other abstraction
+
+libraries that offer boilerplate-free implementation of lenses using Scala
+
+[Monocle](https://github.com/julien-truffaut/Monocle)
+
+Scalaz and Shapeless offer lenses
+
+LENS LAWS
+- Identity
+- Retention
+- Double set
+
+EXERCISE 3.2 VERIFYING LENS LAWS
+
+### 3.3.6 Repositories and the timeless art of decoupling (page 97)
+
+passing repo on method call in service is:
+- verbose
+- coupling API of service with the context
+- lack of compositionality
+
+curry it
+
+
+building abstractions through incremental composition - compose it with any other computation that returns 
+a `Function1[AccountRepository, _]` and defer the evaluation until you’ve built the whole computation pipeline
+
+reader monad - `case class Reader[R, A](run: R => A)`
+
+EXERCISE 3.3 INJECTING MULTIPLE DEPENDENCIES
+A: Since this is just nested curring you can turn repository inputs denoted R as `R => A => R2 => B => R3 => C` into
+`(R1, R2, R3) => C` which is a reversal of the curry effect
+
+[MacWire] (https://github.com/adamw/macwire)
+
+### 3.3.7 Using lifecycle patterns effectively—the major takeaways (page 104)
+
+- ADT and pattern matching
+- lenses
+- reader monad
+- smart constructor
+
+## 3.4 Summary (page 105)
+
+- Thinking in algebra
+- Type-driven composition
+- Separation of concerns
+- Aggregate as the unit of consistency
+- Functional implementation of domain object patterns
