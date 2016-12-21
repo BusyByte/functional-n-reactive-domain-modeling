@@ -18,7 +18,7 @@ object Listing2_15 {
   } yield (v)
 
   result onComplete {
-    case Success(v) => // Success path of the future completion
+    case Success(v)  => // Success path of the future completion
     case Failure(ex) => // Failure path of the future completion
   }
 }
