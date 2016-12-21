@@ -169,7 +169,7 @@ a `Function1[AccountRepository, _]` and defer the evaluation until you’ve buil
 reader monad - `case class Reader[R, A](run: R => A)`
 
 EXERCISE 3.3 INJECTING MULTIPLE DEPENDENCIES
-A: Since this is just nested curring you can turn repository inputs denoted R as `R => A => R2 => B => R3 => C` into
+A: Since this is just nested curring you can turn repository reader monad denoted R as `R => A => R2 => B => R3 => C` into
 `(R1, R2, R3) => C` which is a reversal of the curry effect
 
 [MacWire] (https://github.com/adamw/macwire)
