@@ -4,7 +4,6 @@ import java.util.Date
 
 import net.nomadicalien.ch4.Listing_4_1.{Balance, DR, Money, Transaction}
 
-
 /**
   * Base abstractions for defining Transaction and Balance
   * page 112
@@ -27,7 +26,6 @@ object Listing_4_1 {
   case object AUD extends Currency
   case object INR extends Currency
 
-
   /**
     * Money abstraction. You have a Map to encode denominations of multiple currencies.
     */
@@ -35,9 +33,11 @@ object Listing_4_1 {
     def +(that: Money) = {
       val n = that.m.foldLeft(m) { (a, e) =>
         val (ccy, amt) = e
-        a.get(ccy).map { amount =>
-          a + ((ccy, amt + amount))
-        }.getOrElse(a + ((ccy, amt)))
+        a.get(ccy)
+          .map { amount =>
+            a + ((ccy, amt + amount))
+          }
+          .getOrElse(a + ((ccy, amt)))
       }
       Money(n)
     }
@@ -49,20 +49,24 @@ object Listing_4_1 {
   }
 
   object MoneyOrdering extends Ordering[Money] {
-    def compare(a:Money, b:Money) = a.toBaseCurrency compare b.toBaseCurrency
+    def compare(a: Money, b: Money) = a.toBaseCurrency compare b.toBaseCurrency
   }
 
   /**
     * Transaction that clients make in a bank
     */
-  case class Transaction(txid: String, accountNo: String, date: Date, amount: Money, txnType: TransactionType, status: Boolean)
+  case class Transaction(txid: String,
+                         accountNo: String,
+                         date: Date,
+                         amount: Money,
+                         txnType: TransactionType,
+                         status: Boolean)
 
   /**
     * Balance of a client
     */
   case class Balance(b: Money)
 }
-
 
 /**
   * Algebra and implementation of module Analytics
@@ -82,7 +86,6 @@ object Listing_4_2 {
     def sumBalances(bs: List[Balance]): Money
   }
 
-
   object Analytics extends Analytics[Transaction, Balance, Money] {
 
     import scala.math.Ordering
@@ -93,7 +96,6 @@ object Listing_4_2 {
       */
     def maxDebitOnDay(txns: List[Transaction]): Money = {
       txns.filter(_.txnType == DR).foldLeft(zeroMoney) { (a, txn) =>
-
         if (gt(txn.amount, a)) valueOf(txn) else a
       }
     }
@@ -117,7 +119,6 @@ object Listing_4_2 {
       */
     private def creditBalance(b: Balance): Money = ???
 
-
   }
 
 }
@@ -131,6 +132,7 @@ object Listing_4_3 {
     def zero: T
     def op(t1: T, t2: T): T
   }
+
   /**
     * Both functions now need an implicit Monoid for Money.
     * This will be used in the implementation to transform specific operations on Money to that of a Monoid.
@@ -145,10 +147,13 @@ object Listing_4_3 {
   object Analytics extends Analytics[Transaction, Balance, Money] {
     def maxDebitOnDay(txns: List[Transaction])(implicit m: Monoid[Money]): Money = {
       txns.filter(_.txnType == DR).foldLeft(m.zero) { (a, txn) =>
-      m.op(a, valueOf(txn)) }
+        m.op(a, valueOf(txn))
+      }
     }
     def sumBalances(balances: List[Balance])(implicit m: Monoid[Money]): Money =
-      balances.foldLeft(m.zero) { (a, bal) => m.op(a, creditBalance(bal)) }
+      balances.foldLeft(m.zero) { (a, bal) =>
+        m.op(a, creditBalance(bal))
+      }
 
     private def valueOf(txn: Transaction): Money = ???
     private def creditBalance(b: Balance): Money = ???
