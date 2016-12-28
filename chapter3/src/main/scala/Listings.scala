@@ -155,12 +155,14 @@ object Listing_3_5 {
     }
     private def closeDateCheck(openDate: Option[Date], closeDate: Option[Date]): Try[(Date, Option[Date])] = {
       val od = openDate.getOrElse(today)
-      closeDate.map { cd =>
-        if (cd before od) Failure(new Exception(s"Close date [$cd] cannot be earlier than open date [$od]"))
-        else Success((od, Some(cd)))
-      }.getOrElse {
-        Success((od, closeDate))
-      }
+      closeDate
+        .map { cd =>
+          if (cd before od) Failure(new Exception(s"Close date [$cd] cannot be earlier than open date [$od]"))
+          else Success((od, Some(cd)))
+        }
+        .getOrElse {
+          Success((od, closeDate))
+        }
     }
   }
 }
