@@ -94,6 +94,8 @@ What good is the applicative functor pattern for your domain model?
 
 apply Applicative Functor pattern when you need to execute contexts that are independent of each other in sequence
 
+`independent` effects like possibly Future and parallelize
+
 ### 4.2.3 Monadic effects - a variant on the applicative pattern (page 125)
 
 
