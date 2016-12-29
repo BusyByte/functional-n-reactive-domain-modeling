@@ -159,3 +159,27 @@ object Listing_4_3 {
     private def creditBalance(b: Balance): Money = ???
   }
 }
+
+
+/**
+  * The Applicative Functor trait (simplified) (page 122)
+  */
+object Listing_4_4 {
+  trait Functor[F[_]] {
+    def map[A, B](a: F[A])(f: A => B): F[B]
+  }
+
+  trait Applicative[F[_]] extends Functor[F] {
+    /*
+      Primitive operations that implementing classes need to provide.
+      You’ll see a sample implementation shortly.
+     */
+    def ap[A,B](fa: => F[A])(f: => F[A => B]): F[B]
+    def apply2[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] =
+      ap(fb)(map(fa)(f.curried))
+    def lift2[A,B,C](f: (A, B) => C): (F[A], F[B]) => F[C] =
+      apply2(_, _)(f)
+    def unit[A](a: => A): F[A]
+
+  }
+}
