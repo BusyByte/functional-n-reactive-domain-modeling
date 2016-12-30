@@ -6,6 +6,8 @@ lazy val commonSettings = Seq(
 )
 
 lazy val librarySettings = Seq(
+  "org.typelevel"  %% "cats-core"         % "0.8.1",
+  "org.typelevel"  %% "cats-laws"         % "0.8.1"  % Test,
   "org.specs2"     %% "specs2-core"       % "3.8.6"  % Test,
   "org.specs2"     %% "specs2-scalacheck" % "3.8.6"  % Test,
   "org.scalacheck" %% "scalacheck"        % "1.13.4" % Test

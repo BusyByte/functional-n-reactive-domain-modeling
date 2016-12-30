@@ -98,4 +98,22 @@ apply Applicative Functor pattern when you need to execute contexts that are ind
 
 ### 4.2.3 Monadic effects - a variant on the applicative pattern (page 125)
 
+monad errors fall out on left of tree, short circuits (rail-road track with transfers off for errors)
 
+- function application
+- function composition
+- failure handling
+
+Applicative or Monad?
+
+use the `least powerful abstraction` that works for your `use case`
+
+fall back to monad when you need flatMap
+
+state monad
+
+Listing 4.5 why are we using a `modify `to create a state monad?
+Why not use `set` since we are creating a new monad?
+not really updating anything
+
+manage mutable state in referential transparent way

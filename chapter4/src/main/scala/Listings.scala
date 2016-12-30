@@ -4,6 +4,8 @@ import java.util.Date
 
 import net.nomadicalien.ch4.Listing_4_1.{Balance, DR, Money, Transaction}
 
+import scala.util.{Success, Try}
+
 /**
   * Base abstractions for defining Transaction and Balance
   * page 112
@@ -181,4 +183,68 @@ object Listing_4_4 {
     def unit[A](a: => A): F[A]
 
   }
+}
+
+/**
+  * Balance update using the State monad (page 131)
+  */
+object Listing_4_5 {
+  import cats.data._
+  import cats.Monoid
+  import cats.data.State._
+
+  type AccountNo = String
+  type Balances = Map[AccountNo, Balance]
+  val balances: Balances = Map.empty[AccountNo, Balance]
+
+  def updateBalance(txns: List[Transaction]): State[Balances, Unit] =
+    modify { (b: Balances) =>
+      txns.foldLeft(b) { (a, txn) =>
+        implicitly[Monoid[Balances]].combine(a, Map(txn.accountNo -> Balance(txn.amount))) }
+    }
+
+  val txns = List.empty[Transaction]
+  updateBalance(txns) run balances
+}
+
+
+/**
+  * Using a monadic combinator to generate valid account numbers
+  */
+object Listing_4_6 {
+  sealed trait Account
+  sealed trait AccountRepository {
+    def query(accountNo: String): Try[Option[Account]]
+  }
+  /*
+    AccountRepository is the repository, which stores accounts.
+    See chapter 3 for details on Repository.
+   */
+  final class Generator(rep: AccountRepository) {
+    //The generation logic will be complex. Assume random strings for the time being.
+    val no: String = scala.util.Random.nextString(10)
+    def exists: Boolean = rep.query(no) match { // Queries the repository to check for uniqueness
+      case Success(Some(_)) => true
+      case _ => false
+    }
+  }
+  import cats.Monad
+  import cats.Monad._
+  import cats.data.State._
+  //see https://github.com/typelevel/cats/pull/1216
+  def whileM_[A, F[_]](p: F[Boolean])(body: => F[A]): F[Unit] = {
+    lazy val f = body
+    lazy val monad = implicitly[Monad[F[A]]]
+    monad.ifM(p)(monad.flatMap(f)(_ => whileM_(p)(f)), monad.pure(()))
+  }
+
+
+  val StateGen = set[Generator](new Generator(r))
+
+  val r: AccountRepository = ???
+  //def gets[A](f: S => A): F[A] = bind(init)(s => point(f(s)))
+  val s = whileM_(gets(_.exists), modify(_ => new Generator(r)))
+  val start = new Generator(r)
+  s exec start
+
 }
