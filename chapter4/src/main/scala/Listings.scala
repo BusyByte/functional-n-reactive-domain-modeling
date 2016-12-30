@@ -2,9 +2,11 @@ package net.nomadicalien.ch4
 
 import java.util.Date
 
-import net.nomadicalien.ch4.Listing_4_1.{Balance, DR, Money, Transaction}
+import net.nomadicalien.ch4.Listing_4_1._
+import net.nomadicalien.ch4.Listing_4_3.Monoid
 
 import scala.util.{Success, Try}
+
 
 /**
   * Base abstractions for defining Transaction and Balance
@@ -67,7 +69,7 @@ object Listing_4_1 {
   /**
     * Balance of a client
     */
-  case class Balance(b: Money)
+  case class Balance(amount: Money)
 }
 
 /**
@@ -189,18 +191,44 @@ object Listing_4_4 {
   * Balance update using the State monad (page 131)
   */
 object Listing_4_5 {
-  import cats.data._
-  import cats.Monoid
-  import cats.data.State._
-
+  import Money.zeroMoney
+  import scalaz.State
+  import scalaz.State._
   type AccountNo = String
   type Balances = Map[AccountNo, Balance]
   val balances: Balances = Map.empty[AccountNo, Balance]
 
+  implicit val BigDecimalAdditionMonoid = new Monoid[BigDecimal] {
+    val zero = BigDecimal(0)
+    def op(i: BigDecimal, j: BigDecimal) = i + j
+  }
+
+  implicit def MapMonoid[K, V: Monoid] = new Monoid[Map[K, V]] {
+    def zero = Map.empty[K, V]
+    def op(m1: Map[K, V], m2: Map[K, V]) = m2.foldLeft(m1) { (a, e) =>
+      val (key, value) = e
+      a.get(key).map(v => a + ((key, implicitly[Monoid[V]].op(v, value)))).getOrElse(a + ((key, value)))
+    }
+  }
+
+  implicit def MoneyAdditionMonoid = new Monoid[Money] {
+    val m = implicitly[Monoid[Map[Currency, BigDecimal]]]
+    def zero = zeroMoney
+    def op(m1: Money, m2: Money) = Money(m.op(m1.m, m2.m))
+  }
+
+  implicit def BalanceAdditionMonoid = new Monoid[Balance] {
+    val m = implicitly[Monoid[Money]]
+    def zero = Balance(zeroMoney)
+    def op(b1: Balance, b2: Balance) = Balance(m.op(b1.amount, b2.amount))
+  }
+
+
+
   def updateBalance(txns: List[Transaction]): State[Balances, Unit] =
     modify { (b: Balances) =>
       txns.foldLeft(b) { (a, txn) =>
-        implicitly[Monoid[Balances]].combine(a, Map(txn.accountNo -> Balance(txn.amount))) }
+        implicitly[Monoid[Balances]].op(a, Map(txn.accountNo -> Balance(txn.amount))) }
     }
 
   val txns = List.empty[Transaction]
@@ -212,6 +240,9 @@ object Listing_4_5 {
   * Using a monadic combinator to generate valid account numbers
   */
 object Listing_4_6 {
+  import scalaz._
+  //import Scalaz._
+
   sealed trait Account
   sealed trait AccountRepository {
     def query(accountNo: String): Try[Option[Account]]
@@ -224,27 +255,15 @@ object Listing_4_6 {
     //The generation logic will be complex. Assume random strings for the time being.
     val no: String = scala.util.Random.nextString(10)
     def exists: Boolean = rep.query(no) match { // Queries the repository to check for uniqueness
-      case Success(Some(_)) => true
+      case scala.util.Success(Some(_)) => true
       case _ => false
     }
   }
-  import cats.Monad
-  import cats.Monad._
-  import cats.data.State._
-  //see https://github.com/typelevel/cats/pull/1216
-  def whileM_[A, F[_]](p: F[Boolean])(body: => F[A]): F[Unit] = {
-    lazy val f = body
-    lazy val monad = implicitly[Monad[F[A]]]
-    monad.ifM(p)(monad.flatMap(f)(_ => whileM_(p)(f)), monad.pure(()))
-  }
 
-
-  val StateGen = set[Generator](new Generator(r))
-
+  val StateGen = StateT.stateMonad[Generator]
+  import StateGen._
   val r: AccountRepository = ???
-  //def gets[A](f: S => A): F[A] = bind(init)(s => point(f(s)))
   val s = whileM_(gets(_.exists), modify(_ => new Generator(r)))
   val start = new Generator(r)
   s exec start
-
 }
