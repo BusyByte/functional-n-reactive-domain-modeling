@@ -117,3 +117,33 @@ Why not use `set` since we are creating a new monad?
 not really updating anything
 
 manage mutable state in referential transparent way
+
+## 4.3 How patterns shape your domain model (page 134)
+
+[Phil Wadler’s paper “Theorems for Free”](http://homepages.inf.ed.ac.uk/wadler/topics/parametricity.html)
+
+latter of goodness (Figure 4.4 page 135)
+
+[“Haskell in the Large” by Don Stewart](http://web.archive.org/web/20150129012424/http://code.haskell.org/~dons/talks/dons-google-2015-01-27.pdf)
+
+Design patterns compose - `Validation` abstraction
+
+`correct by construction`
+
+### EXERCISE 4.2 ACCUMULATING VALIDATION ERRORS (APPLICATIVELY) (page 137)
+
+For the following method:
+```scala
+ def savingsAccount(no: String, name: String, rate: BigDecimal,
+           openDate: Option[Date], closeDate: Option[Date],
+           balance: Balance): ValidationNel[String, Account] = ???
+```
+
+You need to implement the following validation rules: 
+- (1) account numbers must have a minimum length of 10 characters, 
+- (2) the rate of interest has to be positive, and 
+- (3) the open date (default to today if not specified) must be before the close date.
+
+
+## 4.4 Evolution of an API with algebra, types, and patterns (page 139)
+
