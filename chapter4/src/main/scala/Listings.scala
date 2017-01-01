@@ -303,6 +303,8 @@ object Listing_4_9 {
   * Trade generation from client orders (page 143)
   */
 object Listing_4_10 {
+  import scalaz._
+  import Scalaz._
 
   trait Trading[Account, Market, Order, ClientOrder, Execution, Trade] {
     def clientOrders: Kleisli[List, ClientOrder, Order]
@@ -318,5 +320,25 @@ object Listing_4_10 {
         execute(market, broker) andThen
         allocate(clientAccounts)
     }
+  }
+}
+
+/**
+  * The model for a loan application
+  */
+object Listing_4_11 {
+  object Loans {
+
+    case class LoanApplication private[Loans](
+      date: Date,
+      name: String,
+      purpose: String,
+      repayIn: Int,
+      actualRepaymentYears: Option[Int] = None,
+      startDate: Option[Date] = None,
+      loanNo: Option[String] = None,
+      emi: Option[BigDecimal] = None
+    )
+
   }
 }

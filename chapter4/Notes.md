@@ -188,5 +188,11 @@ qualities of a good domain model
 
 ## 4.5 Tighten up domain invariants with patterns and types (page 144)
 
+use type system and generic invariants for additional tests by the compiler
+
+### 4.5.1 A model for loan processing (page 144)
+
+
+
 
 
