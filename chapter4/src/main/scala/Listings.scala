@@ -329,15 +329,15 @@ object Listing_4_10 {
 object Listing_4_11 {
   object Loans {
 
-    case class LoanApplication private[Loans](
-      date: Date,
-      name: String,
-      purpose: String,
-      repayIn: Int,
-      actualRepaymentYears: Option[Int] = None,
-      startDate: Option[Date] = None,
-      loanNo: Option[String] = None,
-      emi: Option[BigDecimal] = None
+    case class LoanApplication private[Loans] (
+        date: Date,
+        name: String,
+        purpose: String,
+        repayIn: Int,
+        actualRepaymentYears: Option[Int] = None,
+        startDate: Option[Date] = None,
+        loanNo: Option[String] = None,
+        emi: Option[BigDecimal] = None
     )
 
   }
@@ -349,21 +349,20 @@ object Listing_4_11 {
 object Listing_4_12 {
   object Loans {
 
-    case class LoanApplication private[Loans](
-      date: Date,
-      name: String,
-      purpose: String,
-      repayIn: Int,
-      actualRepaymentYears: Option[Int] = None,
-      startDate: Option[Date] = None,
-      loanNo: Option[String] = None,
-      emi: Option[BigDecimal] = None
+    case class LoanApplication private[Loans] (
+        date: Date,
+        name: String,
+        purpose: String,
+        repayIn: Int,
+        actualRepaymentYears: Option[Int] = None,
+        startDate: Option[Date] = None,
+        loanNo: Option[String] = None,
+        emi: Option[BigDecimal] = None
     )
 
-    def applyLoan(name: String, purpose: String, repayIn: Int,
-      date: Date): LoanApplication = ???
-    def approve: Kleisli[Option, LoanApplication, LoanApplication] = ???
-    def enrich: Kleisli[Option, LoanApplication, LoanApplication] = ???
+    def applyLoan(name: String, purpose: String, repayIn: Int, date: Date): LoanApplication = ???
+    def approve: Kleisli[Option, LoanApplication, LoanApplication]                          = ???
+    def enrich: Kleisli[Option, LoanApplication, LoanApplication]                           = ???
   }
 }
 
@@ -378,15 +377,15 @@ object Listing_4_13 {
     val today = new Date()
 
     //LoanApplication is now parameterized on the type
-    case class LoanApplication[Status] private[Loans](
-      date: Date,
-      name: String,
-      purpose: String,
-      repayIn: Int,
-      actualRepaymentYears: Option[Int] = None,
-      startDate: Option[Date] = None,
-      loanNo: Option[String] = None,
-      emi: Option[BigDecimal] = None
+    case class LoanApplication[Status] private[Loans] (
+        date: Date,
+        name: String,
+        purpose: String,
+        repayIn: Int,
+        actualRepaymentYears: Option[Int] = None,
+        startDate: Option[Date] = None,
+        loanNo: Option[String] = None,
+        emi: Option[BigDecimal] = None
     )
 
     // The Phantom types
@@ -396,21 +395,21 @@ object Listing_4_13 {
 
     trait Enriched
 
-    type LoanApplied = LoanApplication[Applied]
+    type LoanApplied  = LoanApplication[Applied]
     type LoanApproved = LoanApplication[Approved]
     type LoanEnriched = LoanApplication[Enriched]
 
-
-    def applyLoan(name: String, purpose: String, repayIn: Int,
-      date: Date = today) =
+    def applyLoan(name: String, purpose: String, repayIn: Int, date: Date = today) =
       LoanApplication[Applied](date, name, purpose, repayIn)
 
     def approve = Kleisli[Option, LoanApplied, LoanApproved] { l =>
       l.copy(
-        loanNo = scala.util.Random.nextString(10).some,
-        actualRepaymentYears = 15.some,
-        startDate = today.some
-      ).some.map(identity[LoanApproved])
+          loanNo = scala.util.Random.nextString(10).some,
+          actualRepaymentYears = 15.some,
+          startDate = today.some
+        )
+        .some
+        .map(identity[LoanApproved])
     }
 
     def enrich = Kleisli[Option, LoanApproved, LoanEnriched] { l =>
@@ -418,9 +417,12 @@ object Listing_4_13 {
         y <- l.actualRepaymentYears
         s <- l.startDate
       } yield (y, s)
-      l.copy(emi = x.map { case (y, s) =>
-        calculateEMI(y, s)
-      }).some.map(identity[LoanEnriched])
+      l.copy(emi = x.map {
+          case (y, s) =>
+            calculateEMI(y, s)
+        })
+        .some
+        .map(identity[LoanEnriched])
     }
 
     private def calculateEMI(tenure: Int, startDate: Date): BigDecimal = ???
