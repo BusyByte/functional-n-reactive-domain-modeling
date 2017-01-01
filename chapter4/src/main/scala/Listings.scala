@@ -6,6 +6,7 @@ import net.nomadicalien.ch4.Listing_4_1._
 import net.nomadicalien.ch4.Listing_4_3.Monoid
 
 import scala.util.{Success, Try}
+import scalaz.Kleisli
 
 
 /**
@@ -266,4 +267,60 @@ object Listing_4_6 {
   val s = whileM_(gets(_.exists), modify(_ => new Generator(r)))
   val start = new Generator(r)
   s exec start
+}
+
+
+/**
+  * Algebra for the Trading API (page 140)
+  */
+object Listing_4_7 {
+  trait Trading[Account, Market, Order, ClientOrder, Execution, Trade] {
+    def clientOrders: ClientOrder => List[Order]
+    def execute: Market => Account => Order => List[Execution]
+    def allocate: List[Account] => Execution => List[Trade]
+  }
+}
+
+/**
+  * Algebra for the Trading API (slightly refactored) (page 141)
+  */
+object Listing_4_8 {
+  trait Trading[Account, Market, Order, ClientOrder, Execution, Trade] {
+    def clientOrders: ClientOrder => List[Order]
+    def execute(m: Market, a: Account): Order => List[Execution]
+    def allocate(as: List[Account]): Execution => List[Trade]
+  }
+}
+
+/**
+  * Algebra for the Trading API (using the Kleisli pattern) (page 142)
+  */
+object Listing_4_9 {
+  trait Trading[Account, Market, Order, ClientOrder, Execution, Trade] {
+    def clientOrders: Kleisli[List, ClientOrder, Order]
+    def execute(m: Market, a: Account): Kleisli[List, Order, Execution]
+    def allocate(as: List[Account]): Kleisli[List, Execution, Trade]
+  }
+}
+
+/**
+  * Trade generation from client orders (page 143)
+  */
+object Listing_4_10 {
+
+  trait Trading[Account, Market, Order, ClientOrder, Execution, Trade] {
+    def clientOrders: Kleisli[List, ClientOrder, Order]
+    def execute(m: Market, a: Account): Kleisli[List, Order, Execution]
+    def allocate(as: List[Account]): Kleisli[List, Execution, Trade]
+
+    def tradeGeneration(
+      market: Market,
+      broker: Account,
+      clientAccounts: List[Account]
+    ): Kleisli[List, ClientOrder, Trade] = {
+      clientOrders andThen
+        execute(market, broker) andThen
+        allocate(clientAccounts)
+    }
+  }
 }

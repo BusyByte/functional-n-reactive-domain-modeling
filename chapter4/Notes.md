@@ -144,6 +144,49 @@ You need to implement the following validation rules:
 - (2) the rate of interest has to be positive, and 
 - (3) the open date (default to today if not specified) must be before the close date.
 
+### EXERCISE 4.3 FAIL-FAST VALIDATION (MONADIC) (page 138)
+```scala
+def savingsAccount(no: String, name: String, rate: BigDecimal,
+  openDate: Option[Date], closeDate: Option[Date],
+  balance: Balance): ??? = {...
+```
+
 
 ## 4.4 Evolution of an API with algebra, types, and patterns (page 139)
+
+http://www.investopedia.com/
+
+### 4.4.1 The algebra — first draft (page 140)
+
+### 4.4.2 Refining the algebra (page 141)
+
+Kleisli arrow 28 that allows functions 
+f: A => M[B] and 
+g: B => M[C] to compose and 
+yield A => M[C], where M is a Monad
+
+```scala
+ case class Kleisli[M[_], A, B](run: A => M[B]) {
+     def andThen[C](k: Kleisli[M, B, C])(implicit b: Monad[M]) =
+       Kleisli[M, A, C]((a: A) => b.bind(this(a))(k.run))
+
+    def compose[C](k: Kleisli[M, C, A])(implicit b: Monad[M]) =
+      k andThen this
+ }
+```
+Why do we need this extra layer of composition?  List as a Monad already composes?
+
+### 4.4.3 Final composition - follow the types
+
+qualities of a good domain model
+- Intention-revealing interfaces drawn from the ubiquitous language
+- Making implicit concepts explicit
+- Side-effect-free functions
+- Declarative design
+
+#### EXERCISE 4.4 DEMYSTIFYING KLEISLI
+
+## 4.5 Tighten up domain invariants with patterns and types (page 144)
+
+
 
