@@ -8,7 +8,6 @@ import net.nomadicalien.ch4.Listing_4_3.Monoid
 import scala.util.{Success, Try}
 import scalaz.Kleisli
 
-
 /**
   * Base abstractions for defining Transaction and Balance
   * page 112
@@ -196,11 +195,11 @@ object Listing_4_5 {
   import scalaz.State
   import scalaz.State._
   type AccountNo = String
-  type Balances = Map[AccountNo, Balance]
+  type Balances  = Map[AccountNo, Balance]
   val balances: Balances = Map.empty[AccountNo, Balance]
 
   implicit val BigDecimalAdditionMonoid = new Monoid[BigDecimal] {
-    val zero = BigDecimal(0)
+    val zero                             = BigDecimal(0)
     def op(i: BigDecimal, j: BigDecimal) = i + j
   }
 
@@ -213,29 +212,27 @@ object Listing_4_5 {
   }
 
   implicit def MoneyAdditionMonoid = new Monoid[Money] {
-    val m = implicitly[Monoid[Map[Currency, BigDecimal]]]
-    def zero = zeroMoney
+    val m                        = implicitly[Monoid[Map[Currency, BigDecimal]]]
+    def zero                     = zeroMoney
     def op(m1: Money, m2: Money) = Money(m.op(m1.m, m2.m))
   }
 
   implicit def BalanceAdditionMonoid = new Monoid[Balance] {
-    val m = implicitly[Monoid[Money]]
-    def zero = Balance(zeroMoney)
+    val m                            = implicitly[Monoid[Money]]
+    def zero                         = Balance(zeroMoney)
     def op(b1: Balance, b2: Balance) = Balance(m.op(b1.amount, b2.amount))
   }
-
-
 
   def updateBalance(txns: List[Transaction]): State[Balances, Unit] =
     modify { (b: Balances) =>
       txns.foldLeft(b) { (a, txn) =>
-        implicitly[Monoid[Balances]].op(a, Map(txn.accountNo -> Balance(txn.amount))) }
+        implicitly[Monoid[Balances]].op(a, Map(txn.accountNo -> Balance(txn.amount)))
+      }
     }
 
   val txns = List.empty[Transaction]
   updateBalance(txns) run balances
 }
-
 
 /**
   * Using a monadic combinator to generate valid account numbers
@@ -257,18 +254,17 @@ object Listing_4_6 {
     val no: String = scala.util.Random.nextString(10)
     def exists: Boolean = rep.query(no) match { // Queries the repository to check for uniqueness
       case scala.util.Success(Some(_)) => true
-      case _ => false
+      case _                           => false
     }
   }
 
   val StateGen = StateT.stateMonad[Generator]
   import StateGen._
   val r: AccountRepository = ???
-  val s = whileM_(gets(_.exists), modify(_ => new Generator(r)))
-  val start = new Generator(r)
+  val s                    = whileM_(gets(_.exists), modify(_ => new Generator(r)))
+  val start                = new Generator(r)
   s exec start
 }
-
 
 /**
   * Algebra for the Trading API (page 140)
@@ -314,9 +310,9 @@ object Listing_4_10 {
     def allocate(as: List[Account]): Kleisli[List, Execution, Trade]
 
     def tradeGeneration(
-      market: Market,
-      broker: Account,
-      clientAccounts: List[Account]
+        market: Market,
+        broker: Account,
+        clientAccounts: List[Account]
     ): Kleisli[List, ClientOrder, Trade] = {
       clientOrders andThen
         execute(market, broker) andThen
