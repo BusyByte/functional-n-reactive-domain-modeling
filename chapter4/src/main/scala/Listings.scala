@@ -324,7 +324,7 @@ object Listing_4_10 {
 }
 
 /**
-  * The model for a loan application
+  * The model for a loan application (page 144)
   */
 object Listing_4_11 {
   object Loans {
@@ -340,5 +340,89 @@ object Listing_4_11 {
       emi: Option[BigDecimal] = None
     )
 
+  }
+}
+
+/**
+  * First draft of workflow functions for loan processing (page 145)
+  */
+object Listing_4_12 {
+  object Loans {
+
+    case class LoanApplication private[Loans](
+      date: Date,
+      name: String,
+      purpose: String,
+      repayIn: Int,
+      actualRepaymentYears: Option[Int] = None,
+      startDate: Option[Date] = None,
+      loanNo: Option[String] = None,
+      emi: Option[BigDecimal] = None
+    )
+
+    def applyLoan(name: String, purpose: String, repayIn: Int,
+      date: Date): LoanApplication = ???
+    def approve: Kleisli[Option, LoanApplication, LoanApplication] = ???
+    def enrich: Kleisli[Option, LoanApplication, LoanApplication] = ???
+  }
+}
+
+/**
+  * The loan-processing workflow with phantom types
+  */
+object Listing_4_13 {
+  object Loans {
+    import scalaz._
+    import scalaz.Scalaz._
+
+    val today = new Date()
+
+    //LoanApplication is now parameterized on the type
+    case class LoanApplication[Status] private[Loans](
+      date: Date,
+      name: String,
+      purpose: String,
+      repayIn: Int,
+      actualRepaymentYears: Option[Int] = None,
+      startDate: Option[Date] = None,
+      loanNo: Option[String] = None,
+      emi: Option[BigDecimal] = None
+    )
+
+    // The Phantom types
+    trait Applied
+
+    trait Approved
+
+    trait Enriched
+
+    type LoanApplied = LoanApplication[Applied]
+    type LoanApproved = LoanApplication[Approved]
+    type LoanEnriched = LoanApplication[Enriched]
+
+
+    def applyLoan(name: String, purpose: String, repayIn: Int,
+      date: Date = today) =
+      LoanApplication[Applied](date, name, purpose, repayIn)
+
+    def approve = Kleisli[Option, LoanApplied, LoanApproved] { l =>
+      l.copy(
+        loanNo = scala.util.Random.nextString(10).some,
+        actualRepaymentYears = 15.some,
+        startDate = today.some
+      ).some.map(identity[LoanApproved])
+    }
+
+    def enrich = Kleisli[Option, LoanApproved, LoanEnriched] { l =>
+      val x = for {
+        y <- l.actualRepaymentYears
+        s <- l.startDate
+      } yield (y, s)
+      l.copy(emi = x.map { case (y, s) =>
+        calculateEMI(y, s)
+      }).some.map(identity[LoanEnriched])
+    }
+
+    private def calculateEMI(tenure: Int, startDate: Date): BigDecimal = ???
   }
 }

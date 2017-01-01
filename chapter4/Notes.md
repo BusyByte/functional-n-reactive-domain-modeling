@@ -192,7 +192,23 @@ use type system and generic invariants for additional tests by the compiler
 
 ### 4.5.1 A model for loan processing (page 144)
 
+### 4.5.2 Making illegal states unrepresentable (page 146)
 
+I like the idea but not sure about the `Phantom Type Pattern` as presented
 
+Traits are not even sealed or related.
 
+Why use phantom types of Applied, Approved, and Enriched?
+
+Why not use additional case classes based sealed trait because usually 
+is extra data to track with each state transition
+
+## Summary
+
+- What are functional design patterns?
+- The ubiquitous monoid
+- Patterns for effectful programming
+- Pattern goodness
+- Implementation from the field #1 - Kleislis
+- Implementation from the field #2 - phantom types
 
