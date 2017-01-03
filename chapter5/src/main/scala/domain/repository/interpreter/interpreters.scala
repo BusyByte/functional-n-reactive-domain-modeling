@@ -1,7 +1,5 @@
 package net.nomadicalien.ch5.domain.repository.interpreter
 
-
-
 import java.util.Date
 
 import net.nomadicalien.ch5.domain.model.Account
@@ -19,9 +17,9 @@ trait AccountRepositoryInMemory extends AccountRepository {
     val r = repo += ((a.no, a))
     a.right
   }
-  def query(openedOn: Date): \/[NonEmptyList[String], Seq[Account]] = repo.values.filter(_.dateOfOpen == openedOn).toSeq.right
+  def query(openedOn: Date): \/[NonEmptyList[String], Seq[Account]] =
+    repo.values.filter(_.dateOfOpen == openedOn).toSeq.right
   def all: \/[NonEmptyList[String], Seq[Account]] = repo.values.toSeq.right
 }
 
 object AccountRepositoryInMemory extends AccountRepositoryInMemory
-

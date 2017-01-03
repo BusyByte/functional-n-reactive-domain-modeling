@@ -21,11 +21,20 @@ sealed trait Account {
   def balance: Balance
 }
 
-final case class CheckingAccount (no: String, name: String,
-  dateOfOpen: Option[Date], dateOfClose: Option[Date] = None, balance: Balance = Balance()) extends Account
+final case class CheckingAccount(no: String,
+                                 name: String,
+                                 dateOfOpen: Option[Date],
+                                 dateOfClose: Option[Date] = None,
+                                 balance: Balance = Balance())
+    extends Account
 
-final case class SavingsAccount (no: String, name: String, rateOfInterest: Amount,
-  dateOfOpen: Option[Date], dateOfClose: Option[Date] = None, balance: Balance = Balance()) extends Account
+final case class SavingsAccount(no: String,
+                                name: String,
+                                rateOfInterest: Amount,
+                                dateOfOpen: Option[Date],
+                                dateOfClose: Option[Date] = None,
+                                balance: Balance = Balance())
+    extends Account
 
 case class Balance(amount: Amount = 0)
 
@@ -34,30 +43,40 @@ object Account {
     if (no.isEmpty || no.size < 5) s"Account No has to be at least 5 characters long: found $no".failureNel[String]
     else no.successNel[String]
 
-  private def validateOpenCloseDate(od: Date, cd: Option[Date]) = cd.map { c =>
-    if (c before od) s"Close date [$c] cannot be earlier than open date [$od]".failureNel[(Option[Date], Option[Date])]
-    else (od.some, cd).successNel[String]
-  }.getOrElse { (od.some, cd).successNel[String] }
+  private def validateOpenCloseDate(od: Date, cd: Option[Date]) =
+    cd.map { c =>
+        if (c before od)
+          s"Close date [$c] cannot be earlier than open date [$od]".failureNel[(Option[Date], Option[Date])]
+        else (od.some, cd).successNel[String]
+      }
+      .getOrElse { (od.some, cd).successNel[String] }
 
   private def validateRate(rate: BigDecimal) =
     if (rate <= BigDecimal(0)) s"Interest rate $rate must be > 0".failureNel[BigDecimal]
     else rate.successNel[String]
 
-  def checkingAccount(no: String, name: String, openDate: Option[Date], closeDate: Option[Date],
-    balance: Balance): \/[NonEmptyList[String], Account] = {
+  def checkingAccount(no: String,
+                      name: String,
+                      openDate: Option[Date],
+                      closeDate: Option[Date],
+                      balance: Balance): \/[NonEmptyList[String], Account] = {
 
     val od = openDate.getOrElse(today)
 
     (
       validateAccountNo(no) |@|
         validateOpenCloseDate(openDate.getOrElse(today), closeDate)
-      ) { (n, d) =>
+    ) { (n, d) =>
       CheckingAccount(n, name, d._1, d._2, balance)
     }.disjunction
   }
 
-  def savingsAccount(no: String, name: String, rate: BigDecimal, openDate: Option[Date],
-    closeDate: Option[Date], balance: Balance): \/[NonEmptyList[String], Account] = {
+  def savingsAccount(no: String,
+                     name: String,
+                     rate: BigDecimal,
+                     openDate: Option[Date],
+                     closeDate: Option[Date],
+                     balance: Balance): \/[NonEmptyList[String], Account] = {
 
     val od = openDate.getOrElse(today)
 
@@ -65,7 +84,7 @@ object Account {
       validateAccountNo(no) |@|
         validateOpenCloseDate(openDate.getOrElse(today), closeDate) |@|
         validateRate(rate)
-      ) { (n, d, r) =>
+    ) { (n, d, r) =>
       SavingsAccount(n, name, r, d._1, d._2, balance)
     }.disjunction
   }
@@ -76,7 +95,8 @@ object Account {
   }
 
   private def validateCloseDate(a: Account, cd: Date) = {
-    if (cd before a.dateOfOpen.get) s"Close date [$cd] cannot be earlier than open date [${a.dateOfOpen.get}]".failureNel[Date]
+    if (cd before a.dateOfOpen.get)
+      s"Close date [$cd] cannot be earlier than open date [${a.dateOfOpen.get}]".failureNel[Date]
     else cd.successNel[String]
   }
 
@@ -105,8 +125,6 @@ object Account {
 
   def rate(a: Account) = a match {
     case SavingsAccount(_, _, r, _, _, _) => r.some
-    case _ => None
+    case _                                => None
   }
 }
-
-
