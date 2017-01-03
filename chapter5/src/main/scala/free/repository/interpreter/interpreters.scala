@@ -25,18 +25,18 @@ case class AccountRepoMutableInterpreter() extends AccountRepoInterpreter {
   val step: AccountRepoF ~> Task = new (AccountRepoF ~> Task) {
     override def apply[A](fa: AccountRepoF[A]): Task[A] = fa match {
       case QueryAccount(no) =>
-        table.get(no)
-          .map { a => now(a) } // now is a combinator on Task that lifts a strict value into a Task [A].
+        table
+          .get(no)
+          .map { a =>
+            now(a)
+          } // now is a combinator on Task that lifts a strict value into a Task [A].
           .getOrElse {
             fail(new RuntimeException(s"Account no $no not found"))
           }
       case StoreAccount(account) => now(table += ((account.no, account))).void
-      case DeleteAccount(no) => now(table -= no).void
+      case DeleteAccount(no)     => now(table -= no).void
     }
   }
 
   def apply[A](action: AccountRepo[A]): Task[A] = action.foldMap(step)
 }
-
-
-
