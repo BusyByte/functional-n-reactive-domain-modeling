@@ -37,3 +37,16 @@ trait AccountService[Account, Amount, Balance] {
     b <- credit(to, amount)
   } yield ((a, b))
 }
+
+
+trait InterestCalculation[Account, Amount] {
+  def computeInterest: Kleisli[Valid, Account, Amount]
+}
+
+trait TaxCalculation[Amount] {
+  def computeTax: Kleisli[Valid, Amount, Amount]
+}
+
+trait InterestPostingService[Account, Amount]
+  extends InterestCalculation[Account, Amount]
+    with TaxCalculation[Amount]
