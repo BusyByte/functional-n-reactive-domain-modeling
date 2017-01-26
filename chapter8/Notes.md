@@ -90,4 +90,3 @@ Slick offers more-reactive APIs by allowing you to stream your database query re
 - CRUD isn’t the only model of persistence
 - Implementing an event-sourced domain model functionally
 - FRM, not ORM
-- 
