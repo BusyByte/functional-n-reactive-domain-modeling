@@ -23,6 +23,7 @@ lazy val root = (project in file("."))
   .aggregate(chapter5)
   .aggregate(chapter6)
   .aggregate(chapter7)
+  .aggregate(chapter8)
 
 lazy val chapterSettings = Seq(
   libraryDependencies ++= librarySettings,
@@ -69,5 +70,11 @@ lazy val chapter6 =
 lazy val chapter7 =
   (project in file("chapter7"))
     .settings(name := "functional-and-reactive-programming-chapter7")
+    .settings(commonSettings: _*)
+    .settings(chapterSettings: _*)
+
+lazy val chapter8 =
+  (project in file("chapter8"))
+    .settings(name := "functional-and-reactive-programming-chapter8")
     .settings(commonSettings: _*)
     .settings(chapterSettings: _*)
